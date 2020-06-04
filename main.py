@@ -24,7 +24,7 @@ def load_cpu(deadline):
     '''
     logger.debug(f"load cpu deadline={deadline}")
     start = time.time()
-
+    # I want to complete well ahead of the deadline
     while time.time() - start < 0.2*deadline:
         math.pow(random.randint(0, 1), random.randint(0, 1))
     logger.debug(f"load cpu done deadline={deadline}")
