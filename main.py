@@ -47,7 +47,8 @@ def spawn_threads(deadline, amount):
     return threads
 
 def join_random_thread(threads):
-    thread = random.sample(range(0, len(threads)), 1)
+    sample = random.sample(range(0, len(threads)), 1)
+    thread = sample[0]
     thread.join()
     return thread
 
