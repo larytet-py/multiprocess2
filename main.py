@@ -22,25 +22,26 @@ def load_cpu(deadline):
     '''
     Consume 100% CPU for some time
     '''
-    logger.debug(f"load cpu deadline={deadline}")
     start = time.time()
     # I want to complete well ahead of the deadline
     while time.time() - start < 0.2*deadline:
         math.pow(random.randint(0, 1), random.randint(0, 1))
-    logger.debug(f"load cpu done deadline={deadline}")
 
+job_counter = 0
 def spawn_job(deadline):
     '''
     Creat a new Process, call join(), process errors
-    '''
+    '''    
+    global job_counter
     time_start = time.time()
     job = multiprocessing.Process(target=load_cpu, args=(deadline, ))
     job.start()
-    logger.debug(f"Call job.join() deadline={deadline}")
     job.join(deadline)
     elapsed = time.time()-time_start
     if elapsed < deadline and job.is_alive():
-        logger.error(f"job.join() returned while process {job.pid} is still alive elapsed={elapsed} deadline={deadline}")
+        logger.error(f"#{job_counter}: job.join() returned while process {job.pid} is still alive elapsed={elapsed} deadline={deadline}")
+        # call to job.close() fails despite the call to terminate() 
+        # Call to job.kill() instead is not an improvement
         job.terminate()
         try:
             job.close()
@@ -48,6 +49,8 @@ def spawn_job(deadline):
             logger.error(f"job.close() failed {e}")
     else:
         logger.debug(f"job.join() returned elapsed={elapsed}")
+    # A not atomic counter, I do not care about precision
+    job_counter += 1        
 
 def spawn_thread(deadline):
     '''
