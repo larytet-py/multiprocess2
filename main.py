@@ -100,7 +100,7 @@ if __name__ == '__main__':
     logger_format = '%(name)s:%(levelname)s:%(filename)s:%(lineno)d:%(message)s'
     logging.basicConfig(format=logger_format)
     logger = logging.getLogger('multiprocess')
-    loglevel = os.environ.get("LOGLEVEL", "DEBUG").upper()
+    loglevel = os.environ.get("LOGLEVEL", "INFO").upper()
     logger.setLevel(loglevel)
     logger.debug("Starting debug log")
 
