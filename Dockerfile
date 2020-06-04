@@ -16,7 +16,7 @@ WORKDIR ${APP_DIR}
 COPY *.py ${APP_DIR}/
 
 # Check syntax
-RUN pylint --disable=R,C,W  extract_url.py service.py
+RUN pylint --disable=R,C,W  main.py
 
 
 CMD ["python3", "service.py"]
