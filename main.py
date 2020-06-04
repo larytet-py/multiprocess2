@@ -16,7 +16,7 @@ import math
 import time
 import random
 import threading
-import psutil
+import multiprocessing
 
 def load_cpu(deadline):
     '''
@@ -36,6 +36,7 @@ def spawn_job(deadline):
     time_start = time.time()
     job = multiprocessing.Process(target=load_cpu, args=(deadline, ))
     job.start()
+    # timeout=None in the call to join() solves the problem
     job.join(deadline)
     elapsed = time.time()-time_start
     if elapsed < deadline and job.is_alive():
