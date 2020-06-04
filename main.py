@@ -27,7 +27,7 @@ def load_cpu(deadline):
     logger.debug(f"load cpu done deadline={deadline}")
 
 def spawn_job(deadline):
-    timeout = 1.02 * deadline
+    timeout = 1.002 * deadline
     time_start = time.time()
     job = multiprocessing.Process(target=load_cpu, args=(deadline, ))
     job.start()
@@ -56,7 +56,7 @@ def spawn_threads(deadline, amount):
 def join_random_thread(threads, deadline):
     sample = random.sample(range(0, len(threads)), 1)[0]
     thread = threads[sample]
-    timeout = deadline + 0.02*deadline
+    timeout = 1.002 * deadline
     thread.join(timeout)
     return thread
 
