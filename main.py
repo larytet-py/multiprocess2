@@ -27,7 +27,7 @@ def load_cpu(deadline):
 def spawn_job(deadline):
     timeout = deadline + 0.100
     time_start = time.time()
-    job = multiprocessing.Process(target=load_cpu, args=(deadline))
+    job = multiprocessing.Process(target=load_cpu, args=(deadline, ))
     job.start()
     job.join(timeout)
     elapsed = time.time()-time_start
@@ -38,7 +38,7 @@ def spawn_job(deadline):
 def spawn_jobs(amount):
     jobs = []
     for _ in range(amount):
-        job = threading.Thread(target=spawn_job, args=(0.200))
+        job = threading.Thread(target=spawn_job, args=(0.200, ))
         job.start()
         jobs.append(job)
     return jobs
