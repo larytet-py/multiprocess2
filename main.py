@@ -74,6 +74,12 @@ def join_random_thread(threads, deadline):
     return thread
 
 def run_it_all():
+    '''
+    1. Create processes, 
+    2. call join() for one of them,
+    3. start a new one
+    4. Goto step 2
+    '''
     deadline=0.2
     threads = spawn_threads(deadline=deadline, amount=8)
     while True:
