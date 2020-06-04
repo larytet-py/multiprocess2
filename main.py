@@ -34,23 +34,31 @@ def spawn_job(deadline):
     if elapsed < timeout and job.is_alive():
         logger.error("job.join() returned too early")
 
+def spawn_thread(deadline):
+    thread = threading.Thread(target=spawn_job, args=(deadline, ))
+    thread.start()
+    return thread
 
-def spawn_jobs(deadline, amount):
-    jobs = []
+def spawn_threads(deadline, amount):
+    threads = []
     for _ in range(amount):
-        job = threading.Thread(target=spawn_job, args=(deadline, ))
-        job.start()
-        jobs.append(job)
-    return jobs
+        thread = spawn_thread(deadline)
+        threads.append(thread)
+    return threads
 
-def join_jobs(jobs):
-    for job in jobs:
-        job.join()
+def join_random_thread(threads):
+    thread = random.sample(range(0, len(threads)), 1)
+    thread.join()
+    return thread
 
 def run_it_all():
+    threads = spawn_threads(deadline=0.020, amount=8)
     while True:
-        jobs = spawn_jobs(deadline=0.020, amount=8)
-        join_jobs(jobs)
+        thread = join_random_thread(threads)
+        threads.remove(thread)
+
+        thread = spawn_thread(deadline=0.020)
+        threads.append(thread)
     
 if __name__ == '__main__':
     logger = logging.getLogger('multiprocess')
