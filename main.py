@@ -72,7 +72,7 @@ def join_random_thread(threads, deadline):
     #sample = random.sample(range(0, len(threads)), 1)[0]
     sample = 0
     thread = threads[sample]
-    thread.join(deadline)
+    thread.join()
     return thread
 
 def run_it_all():
