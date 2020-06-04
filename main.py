@@ -40,7 +40,7 @@ def spawn_job(deadline):
     job.join(deadline)
     elapsed = time.time()-time_start
     if elapsed < deadline and job.is_alive():
-        logger.error(f"job.join() returned too early elapsed={elapsed} deadline={deadline}")
+        logger.error(f"job.join() returned while process {job.pid} is still alive elapsed={elapsed} deadline={deadline}")
         job.terminate()
         try:
             job.close()
