@@ -36,7 +36,10 @@ def spawn_job(deadline):
     if elapsed < deadline and job.is_alive():
         logger.error(f"job.join() returned too early elapsed={elapsed} deadline={deadline}")
         job.terminate()
-        job.close()
+        try:
+            job.close()
+        except Exception as e:
+            logger.error(f"job.close() failed {e}")
     else:
         logger.debug(f"job.join() returned elapsed={elapsed}")
 
