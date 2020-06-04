@@ -16,7 +16,7 @@ WORKDIR ${APP_DIR}
 COPY *.py ${APP_DIR}/
 
 # Check syntax
-RUN pylint --disable=C  main.py
+RUN pylint --disable=W,C  main.py
 
 
 CMD ["python3", "main.py"]

@@ -19,20 +19,27 @@ import threading
 import multiprocessing
 
 def load_cpu(deadline):
+    logger.debug(f"load cpu deadline={deadline}")
     start = time.time()
 
     while time.time() - start < deadline:
         math.pow(random.randint(0, 1), random.randint(0, 1))
+    logger.debug(f"load cpu done deadline={deadline}")
 
 def spawn_job(deadline):
     timeout = deadline + 0.02*deadline
     time_start = time.time()
     job = multiprocessing.Process(target=load_cpu, args=(deadline, ))
     job.start()
+    logger.debug(f"Call job.join() timeout={timeout}")
     job.join(timeout)
     elapsed = time.time()-time_start
     if elapsed < timeout and job.is_alive():
-        logger.error("job.join() returned too early")
+        logger.error(f"job.join() returned too early elapsed={elapsed}")
+        job.kill()
+        job.close()
+    else:
+        logger.debug(f"job.join() returned elapsed={elapsed}")
 
 def spawn_thread(deadline):
     thread = threading.Thread(target=spawn_job, args=(deadline, ))
@@ -46,17 +53,18 @@ def spawn_threads(deadline, amount):
         threads.append(thread)
     return threads
 
-def join_random_thread(threads):
+def join_random_thread(threads, deadline):
     sample = random.sample(range(0, len(threads)), 1)[0]
     thread = threads[sample]
-    thread.join()
+    timeout = deadline + 0.02*deadline
+    thread.join(timeout)
     return thread
 
 def run_it_all():
     deadline=0.020
     threads = spawn_threads(deadline=deadline, amount=8)
     while True:
-        thread = join_random_thread(threads)
+        thread = join_random_thread(threads, deadline)
         threads.remove(thread)
 
         thread = spawn_thread(deadline=deadline)
@@ -64,6 +72,7 @@ def run_it_all():
     
 if __name__ == '__main__':
     logger = logging.getLogger('multiprocess')
-    loglevel = os.environ.get("LOGLEVEL", "INFO").upper()
-    if loglevel == "": loglevel = os.environ.get("LOG_LEVEL", "INFO").upper()
+    loglevel = os.environ.get("LOGLEVEL", "DEBUG").upper()
+    logger.setLevel(loglevel)
+
     run_it_all()
