@@ -53,12 +53,13 @@ def join_random_thread(threads):
     return thread
 
 def run_it_all():
-    threads = spawn_threads(deadline=0.020, amount=8)
+    deadline=0.020
+    threads = spawn_threads(deadline=deadline, amount=8)
     while True:
         thread = join_random_thread(threads)
         threads.remove(thread)
 
-        thread = spawn_thread(deadline=0.020)
+        thread = spawn_thread(deadline=deadline)
         threads.append(thread)
     
 if __name__ == '__main__':
