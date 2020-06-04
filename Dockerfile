@@ -8,8 +8,9 @@ ENV LANG=en_US.UTF-8
 # Install dependencies and cleanup
 RUN apt-get update \
     && apt-get -y install python3-pip  \
-    && apt-get -y install curl \
     && apt-get -y install git 
+
+RUN pip3 install pylint psutil pytest
 
 # Copy app and set workdir
 RUN mkdir -p ${APP_DIR}/resources
