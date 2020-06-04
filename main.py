@@ -22,19 +22,18 @@ def load_cpu(deadline):
     logger.debug(f"load cpu deadline={deadline}")
     start = time.time()
 
-    while time.time() - start < deadline:
+    while time.time() - start < 0.2*deadline:
         math.pow(random.randint(0, 1), random.randint(0, 1))
     logger.debug(f"load cpu done deadline={deadline}")
 
 def spawn_job(deadline):
-    timeout = 1.002 * deadline
     time_start = time.time()
     job = multiprocessing.Process(target=load_cpu, args=(deadline, ))
     job.start()
-    logger.debug(f"Call job.join() timeout={timeout}")
-    job.join(timeout)
+    logger.debug(f"Call job.join() deadline={deadline}")
+    job.join(deadline)
     elapsed = time.time()-time_start
-    if elapsed < timeout and job.is_alive():
+    if elapsed < deadline and job.is_alive():
         logger.error(f"job.join() returned too early elapsed={elapsed}")
         job.kill()
         job.close()
@@ -56,8 +55,7 @@ def spawn_threads(deadline, amount):
 def join_random_thread(threads, deadline):
     sample = random.sample(range(0, len(threads)), 1)[0]
     thread = threads[sample]
-    timeout = 1.002 * deadline
-    thread.join(timeout)
+    thread.join(deadline)
     return thread
 
 def run_it_all():
