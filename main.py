@@ -25,20 +25,20 @@ def load_cpu(deadline):
         math.pow(random.randint(0, 1), random.randint(0, 1))
 
 def spawn_job(deadline):
-    timeout = deadline + 0.100
+    timeout = deadline + 0.02*deadline
     time_start = time.time()
     job = multiprocessing.Process(target=load_cpu, args=(deadline, ))
     job.start()
     job.join(timeout)
     elapsed = time.time()-time_start
     if elapsed < timeout and job.is_alive():
-        print("job.join() returned too early")
+        logger.error("job.join() returned too early")
 
 
-def spawn_jobs(amount):
+def spawn_jobs(deadline, amount):
     jobs = []
     for _ in range(amount):
-        job = threading.Thread(target=spawn_job, args=(0.200, ))
+        job = threading.Thread(target=spawn_job, args=(deadline, ))
         job.start()
         jobs.append(job)
     return jobs
@@ -49,7 +49,7 @@ def join_jobs(jobs):
 
 def run_it_all():
     while True:
-        jobs = spawn_jobs(8)
+        jobs = spawn_jobs(deadline=0.020, amount=8)
         join_jobs(jobs)
     
 if __name__ == '__main__':
