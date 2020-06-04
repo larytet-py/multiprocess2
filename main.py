@@ -19,6 +19,9 @@ import threading
 import multiprocessing
 
 def load_cpu(deadline):
+    '''
+    Consume 100% CPU for some time
+    '''
     logger.debug(f"load cpu deadline={deadline}")
     start = time.time()
 
@@ -27,6 +30,9 @@ def load_cpu(deadline):
     logger.debug(f"load cpu done deadline={deadline}")
 
 def spawn_job(deadline):
+    '''
+    Creat a new Process, call join(), process errors
+    '''
     time_start = time.time()
     job = multiprocessing.Process(target=load_cpu, args=(deadline, ))
     job.start()
@@ -44,6 +50,9 @@ def spawn_job(deadline):
         logger.debug(f"job.join() returned elapsed={elapsed}")
 
 def spawn_thread(deadline):
+    '''
+    Spawn a thread wich in turn creates a process
+    '''
     thread = threading.Thread(target=spawn_job, args=(deadline, ))
     thread.start()
     return thread
@@ -56,6 +65,9 @@ def spawn_threads(deadline, amount):
     return threads
 
 def join_random_thread(threads, deadline):
+    '''
+    Pick a random thread, call join()
+    '''
     sample = random.sample(range(0, len(threads)), 1)[0]
     thread = threads[sample]
     thread.join(deadline)
