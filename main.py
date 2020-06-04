@@ -81,9 +81,9 @@ def join_random_thread(threads, deadline):
 
 def run_it_all():
     '''
-    1. Create processes, 
+    1. Start a bunch of processes, 
     2. call join() for one of them,
-    3. start a new one
+    3. start a new process
     4. Goto step 2
     '''
     deadline=0.2
