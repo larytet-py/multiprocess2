@@ -68,7 +68,7 @@ def join_random_thread(threads, deadline):
     '''
     Pick a random thread, call join()
     '''
-    # By choosing random sampling you can trigger the exception faster (20s?)
+    # By choosing random sampling I can trigger the exception faster (20s?)
     sample = random.sample(range(0, len(threads)), 1)[0]
     # Picking the oldest is a slower way to get the exception (1-2 minutes?) 
     #sample = 0
