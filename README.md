@@ -6,3 +6,4 @@ https://bugs.python.org/issue40860?@ok_message=msg%20370695%20created%0Aissue%20
 Try 
 
     docker build --tag multiprocess .
+    docker run multiprocess
