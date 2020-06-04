@@ -16,7 +16,6 @@ import math
 import time
 import random
 import threading
-import multiprocessing
 import psutil
 
 def load_cpu(deadline):
@@ -88,7 +87,7 @@ def run_it_all():
     4. Goto step 2
     '''
     deadline=0.2
-    cores = psutil.cpu_count()
+    cores = multiprocessing.cpu_count()
     threads = spawn_threads(deadline=deadline, amount=2*cores)
     while True:
         thread = join_random_thread(threads, deadline)
