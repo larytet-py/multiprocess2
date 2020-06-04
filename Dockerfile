@@ -19,5 +19,5 @@ COPY *.py ${APP_DIR}/
 RUN pylint --disable=C  main.py
 
 
-CMD ["python3", "service.py"]
+CMD ["python3", "main.py"]
 
