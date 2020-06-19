@@ -31,13 +31,13 @@ def spawn_job(deadline):
     '''    
     global job_counter
     time_start = time.time()
-    job = multiprocessing.Process(target=load_cpu, args=(deadline, ))
+    job = multiprocessing.Process(target=waste_time, args=(deadline, ))
     job.start()
     # timeout=None in the call to join() solves the problem
     job.join(deadline)
     elapsed = time.time()-time_start
     if elapsed < deadline and job.is_alive():
-        logger.error(f"#{job_counter}: job.join() returned while process {job.pid} is still alive elapsed={elapsed} deadline={deadline}")
+        logger.debug(f"#{job_counter}: job.join() returned while process {job.pid} is still alive elapsed={elapsed} deadline={deadline}")
         # call to job.close() fails despite the call to terminate() 
         # Call to job.kill() instead is not an improvement
         job.terminate()
