@@ -20,9 +20,9 @@ import psutil
 
 def waste_time(deadline):
     '''
-    Consume 100% CPU for some time
+    Waste some time idling
     '''
-    time.sleep(2*deadline)
+    time.sleep(200*deadline)
 
 job_counter = 0
 def spawn_job(deadline):
@@ -33,20 +33,15 @@ def spawn_job(deadline):
     time_start = time.time()
     job = multiprocessing.Process(target=waste_time, args=(deadline, ))
     job.start()
-    # timeout=None in the call to join() solves the problem
     job.join(deadline)
     elapsed = time.time()-time_start
     if elapsed < deadline and job.is_alive():
-        logger.debug(f"#{job_counter}: job.join() returned while process {job.pid} is still alive elapsed={elapsed} deadline={deadline}")
-        # call to job.close() fails despite the call to terminate() 
-        # Call to job.kill() instead is not an improvement
-        job.terminate()
-        try:
-            job.close()
-        except Exception as e:
-            logger.error(f"job.close() failed {e}")
-    else:
-        logger.debug(f"job.join() returned elapsed={elapsed}")
+        logger.error(f"#{job_counter}: job.join() returned while process {job.pid} is still alive elapsed={elapsed} deadline={deadline}")
+    job.terminate()
+    try:
+        job.close()
+    except Exception as e:
+        logger.debug(f"job.close() failed {e}")
     # A not atomic counter, I do not care about precision
     job_counter += 1        
 
