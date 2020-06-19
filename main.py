@@ -33,7 +33,7 @@ def spawn_job(deadline):
     '''    
     global job_counter
     time_start = time.time()
-    # https://bugs.python.org/issue40860
+    # Protect job.start(): see https://bugs.python.org/issue40860
     with spawn_job_mutex:
         job = multiprocessing.Process(target=waste_time, args=(deadline, ))
         job.start()
