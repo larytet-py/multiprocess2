@@ -16,15 +16,13 @@ import time
 import random
 import threading
 import multiprocessing
+import psutil
 
-def load_cpu(deadline):
+def waste_time(deadline):
     '''
     Consume 100% CPU for some time
     '''
-    start = time.time()
-    # I want to complete well ahead of the deadline
-    while time.time() - start < 0.2*deadline:
-        math.pow(random.randint(0, 1), random.randint(0, 1))
+    time.sleep(2*deadline)
 
 job_counter = 0
 def spawn_job(deadline):
@@ -86,6 +84,8 @@ def run_it_all():
     3. start a new process
     4. Goto step 2
     '''
+    start = time.time()
+    process = psutil.Process(os.getpid())
     deadline=0.2
     cores = multiprocessing.cpu_count()
     threads = spawn_threads(deadline=deadline, amount=2*cores)
@@ -95,6 +95,9 @@ def run_it_all():
 
         thread = spawn_thread(deadline=deadline)
         threads.append(thread)
+        if time.time() - start > 5.0:
+            logger.info(process.memory_info().rss)
+            start = time.time()
     
 if __name__ == '__main__':
     logger_format = '%(name)s:%(levelname)s:%(filename)s:%(lineno)d:%(message)s'
