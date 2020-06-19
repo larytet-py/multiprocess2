@@ -24,15 +24,19 @@ def waste_time(deadline):
     '''
     time.sleep(200*deadline)
 
+
 job_counter = 0
+spawn_job_mutex = threading.Lock()
 def spawn_job(deadline):
     '''
     Creat a new Process, call join(), process errors
     '''    
     global job_counter
     time_start = time.time()
-    job = multiprocessing.Process(target=waste_time, args=(deadline, ))
-    job.start()
+    # https://bugs.python.org/issue40860
+    with spawn_job_mutex:
+        job = multiprocessing.Process(target=waste_time, args=(deadline, ))
+        job.start()
     job.join(deadline)
     elapsed = time.time()-time_start
     if elapsed < deadline and job.is_alive():
